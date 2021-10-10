@@ -17,7 +17,7 @@
 U string;
 U cout;
 
-const char* tokens[] = {"+", "-", "*", "/", "sqr", "^", "(", ")",  NULL };
+const char* tokens[] = {"(", ")" , "^" , "sqrt" , "*" , "+" , "/" , "-" , NULL };
 
 struct node{
     node *Left, *Right;
@@ -82,6 +82,39 @@ Run_tree* Build_Tree (string &line) {
     return 0;
 }
 
+float Handler(string line){
+    float temp;
+    int t = FindString(line, tokens);
+    if (t >= 0){
+        string s1 = line;
+        int n = 1, i = t+1;
+        Run_tree* tree;
+        switch (line[t]) {
+        case '(':
+            while (n) {
+                if (line[i] == '(') ++n;
+                if (line[i] == ')') --n;
+                i++;
+            }
+            s1.erase(i,s1.length());
+            s1.erase(0,t+1);
+            line.erase(t,i);
+            line.insert(t ,std::to_string(Handler(s1)));
+            break;
+        case '*':
+            while (((std::isdigit(line[i]))||('.'))&&(line[i])) ++i;
+            n=t;
+            while (((std::isdigit(line[i]))||('.'))&&(n)) --n;
+            
+            s1.erase(t , s1.length());
+            s1.erase(0 , n+1);
+            temp = std::stof(s1);
+            s1 = line;
+            s1.erase(i , s1.length());
+            s1.erase(0 , t+1);
+            temp *= std::stof(s1);
+        }
+}
 
 bool CheckLine(string &line) {
     int i = 0, n = 0;
@@ -89,7 +122,8 @@ bool CheckLine(string &line) {
     while (line[i]) {
         if (line[i] == '(') ++n;
         if (line[i] == ')') --n;
-        if (line[i] == ',') line[i] = '.'; 
+        if (line[i] == ',') line[i] = '.';
+        if (line[i] == ' ') line.erase(i);
         if (n < 0) {
             cout << RED << "PLease check brackets\n" << COLORENDS;
             return 0;
