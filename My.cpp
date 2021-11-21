@@ -6,6 +6,7 @@
 #define COLORENDS      "\x1b[0m"
 #define GREEN          "\x1b[32m"
 #define RED            "\x1b[31m"
+#define PURPLE         "\x1b[38;2;190;82;125m"
 
 
 using std::cin; 
@@ -26,11 +27,8 @@ int to_int(const char& ch) noexcept {
     case 'C' :
         return 12;
     default:
-        if((ch <= '9')||(ch >= '0')) return ch - '0';
-        else {
-            std::cerr << RED << "Check Num format" << COLORENDS;
-            std::abort();
-        };
+        if((ch <= '9')&&(ch >= '0')) return ch - '0';
+            std::cerr << RED << "WARNING: undefined behavior\n" << PURPLE << "Check Num format\n" << COLORENDS;
     }
     return 0;
 }
@@ -42,9 +40,8 @@ bool check_num (const std::string& str) noexcept {
         right += to_int(str[j]);
         ++i;
         --j;
-        if ((i>8)||(j<6)) {
-            std::cerr << RED << "Wrong count symbol in a num\n" << COLORENDS;
-            std::abort;
+        if ((i>7)||(j<7)) {
+            std::cerr << RED<< "WARNING: undefined behavior\n" << PURPLE << "Wrong count symbol in a num\n" << COLORENDS;
         }
     }
     if(left == right) return true;
